@@ -1,0 +1,17 @@
+import usuarios.*
+import subastas.*
+import publicaciones.*
+
+describe "prueba"{
+	const pepe = new Usuario()
+	const fechaDeFinalizacion = new Date(10,3,2019)
+	const auto = new Vehiculo(valorFijo = 500)
+	const casa = new Inmueble(valorFijo = 1000)
+	const publicacionDePrueba = new Publicacion(objeto = auto, fecha = fechaDeFinalizacion, usuario = pepe, oferta = 10)
+	const publicacionDePrueba2 = new Publicacion(objeto = casa, fecha = fechaDeFinalizacion, usuario = pepe, oferta = 100)
+
+	
+	test "pruebo agregar"{
+		
+	}
+}
