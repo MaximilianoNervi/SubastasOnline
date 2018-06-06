@@ -1,4 +1,4 @@
-import subastas.*
+import subasta.* 
 import publicaciones.*
 
 class Usuario {
@@ -7,7 +7,7 @@ class Usuario {
 	var subastasGanadas = []
 	var publicacionesOfertadas = []
 	var deudas = 0
-	
+
 	method venta(objetoAPublicar, dia, mes, anio, precioBase, clase) {
 		var fechaDeFinalizacion = new Date(dia, mes, anio)
 		var publicacion = new Publicacion(objeto = objetoAPublicar, fecha = fechaDeFinalizacion, usuario = self, oferta = precioBase)
@@ -20,9 +20,7 @@ class Usuario {
 	}
 
 	method ofertar(objeto, oferta) {
-		var publicacion = subasta.buscarObjeto(objeto)
-		publicacion.recibirOfertaDe(self, oferta)
-		self.agregarOferta(publicacion)
+		subasta.ofertan(objeto, oferta, self)
 	}
 
 	method agregarOferta(publicacion) {
@@ -48,18 +46,13 @@ class Usuario {
 	method buscarSubastaGanada(publicacion) {
 		subastasGanadas.contains(publicacion)
 	}
-	
-	method buscarSubastaOfertada(publicacion){
+
+	method buscarSubastaOfertada(publicacion) {
 		publicacionesOfertadas.find(publicacion)
 	}
 
 	method esLooser() {
-		var publicacionesAbiertas = self.publicacionesOfertadasAunAbiertas()
-		return subastasGanadas.removeAll(publicacionesAbiertas)
-	}
-
-	method publicacionesOfertadasAunAbiertas() {
-		return publicacionesOfertadas.filter({ c => !c.estadoDeLaPublicacion() })
+		return subastasGanadas.size() < 1
 	}
 
 }

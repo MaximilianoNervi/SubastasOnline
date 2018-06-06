@@ -1,4 +1,5 @@
 import usuarios.*
+import subasta.*
 
 class Publicacion {
 
@@ -14,19 +15,26 @@ class Publicacion {
 		estadoDeLaPublicacion = false
 	}
 
-	method recibirOfertaDe(unUsuario, unMonto) {
-		var oferente = [ unUsuario, unMonto ]
-		if (estadoDeLaPublicacion) {
-			if (unMonto > oferta) {
-				self.ofertar(unUsuario, unMonto)
-				self.agregarOferente(oferente)
-			}
-		} else self.cobrar()
+	method oferta(unUsuario, unMonto) {
+		self.modificoOferta(unUsuario, unMonto)
+		unUsuario.agregarOferta(self)
 	}
 
-	method ofertar(unUsuario, unMonto) {
+	method chequeoEstado() {
+		if (!estadoDeLaPublicacion) subasta.cobrarComision(self)
+	}
+
+	method recibirOfertaDe(unUsuario, unMonto) {
+		self.chequeoEstado()
+		if (unMonto > oferta) self.oferta(unUsuario, unMonto)
+		unUsuario.agregarOferta(self)
+	}
+
+	method modificoOferta(unUsuario, unMonto) {
 		usuarioConMayorOferta = unUsuario
 		oferta = unMonto
+		var oferente = [ unUsuario, unMonto ]
+		self.agregarOferente(oferente)
 	}
 
 	method agregarOferente(oferente) {
@@ -47,7 +55,7 @@ class Publicacion {
 	}
 
 	method comision() {
-		return objeto.valor(oferta)
+		return objeto.comision(oferta)
 	}
 
 }
@@ -56,7 +64,7 @@ class Producto {
 
 	var valorFijo
 
-	method valor(valor) {
+	method comision(valor) {
 		return valorFijo
 	}
 
@@ -74,9 +82,18 @@ class Inmueble inherits Producto {
 //	const inmuebles = new Producto(valorFijo = 1000)
 class ArticuloDeComputacion inherits Producto {
 
-	override method valor(valor) {
-		return valor * 0.01
+	override method comision(valor) {
+		return valor * 0.10
 	}
 
+}
+
+class Varios inherits Producto{
+	
+	override method comision(valor){
+		var cincoPorciento = valor*0.05
+		if((cincoPorciento) > 10) return cincoPorciento
+		else return 10
+	}
 }
 
